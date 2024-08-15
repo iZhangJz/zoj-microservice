@@ -19,7 +19,7 @@ import static com.zjz.common.constant.UserConstant.USER_LOGIN_STATE;
  * 用户服务
  *
  */
-@FeignClient(name = "zoj-backend-service",path = "/api/user/inner")
+@FeignClient(name = "zoj-user-service",path = "/api/user/inner")
 public interface UserFeignClient {
 
 
@@ -42,11 +42,12 @@ public interface UserFeignClient {
     /**
      * 获取当前登录用户
      *
-     * @param request
+     * @param sessionId
      * @return
      */
     @GetMapping("/get/login")
-    User getLoginUser(@RequestParam("request") HttpServletRequest request);
+    User getLoginUser(@RequestParam("sessionId") String sessionId);
+
 
     /**
      * 是否为管理员

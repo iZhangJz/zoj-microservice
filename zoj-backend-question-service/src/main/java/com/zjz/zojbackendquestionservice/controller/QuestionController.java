@@ -1,6 +1,5 @@
 package com.zjz.zojbackendquestionservice.controller;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zjz.common.annotation.AuthCheck;
@@ -70,7 +69,10 @@ public class QuestionController {
 
         // 如果需要设置用户ID
         if (setUserId) {
-            User loginUser = userFeignClient.getLoginUser(request);
+            User loginUser = userFeignClient.getLoginUser(request.getSession().getId());
+            if (loginUser == null) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+            }
             questionQueryRequest.setUserId(loginUser.getId());
         }
 
@@ -171,7 +173,10 @@ public class QuestionController {
         setQuestionProperty(question,questionAddRequest);
         // 数据校验
         questionService.validQuestion(question, true);
-        User loginUser = userFeignClient.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request.getSession().getId());
+        if (loginUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
         question.setUserId(loginUser.getId());
         // 写入数据库
         boolean result = questionService.save(question);
@@ -193,7 +198,10 @@ public class QuestionController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userFeignClient.getLoginUser(request);
+        User user = userFeignClient.getLoginUser(request.getSession().getId());
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
         long id = deleteRequest.getId();
         // 判断是否存在
         Question oldQuestion = questionService.getById(id);
@@ -315,7 +323,10 @@ public class QuestionController {
 
         // 数据校验
         questionService.validQuestion(question, false);
-        User loginUser = userFeignClient.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request.getSession().getId());
+        if (loginUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
         // 判断是否存在
         long id = questionEditRequest.getId();
         Question oldQuestion = questionService.getById(id);

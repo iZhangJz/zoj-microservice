@@ -72,7 +72,10 @@ public class QuestionSubmitController {
 
         // 如果需要设置用户ID
         if (setUserId) {
-            User loginUser = userFeignClient.getLoginUser(request);
+            User loginUser = userFeignClient.getLoginUser(request.getSession().getId());
+            if (loginUser == null) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+            }
             questionSubmitQueryRequest.setUserId(loginUser.getId());
         }
 
@@ -100,7 +103,10 @@ public class QuestionSubmitController {
         BeanUtils.copyProperties(questionSubmitAddRequest, questionSubmit);
         // 数据校验
         questionSubmitService.validQuestionSubmit(questionSubmit, true);
-        User loginUser = userFeignClient.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request.getSession().getId());
+        if (loginUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
         questionSubmit.setUserId(loginUser.getId());
         questionSubmit.setStatus(JudgeStatusEnum.WAIT.getValue());
         // 写入数据库 默认的判题状态是“等待判题”
@@ -115,6 +121,8 @@ public class QuestionSubmitController {
         return ResultUtils.success(response);
     }
 
+
+
     /**
      * 删除题目提交
      *
@@ -127,7 +135,10 @@ public class QuestionSubmitController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userFeignClient.getLoginUser(request);
+        User user = userFeignClient.getLoginUser(request.getSession().getId());
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
         long id = deleteRequest.getId();
         // 判断是否存在
         QuestionSubmit oldQuestionSubmit = questionSubmitService.getById(id);
@@ -244,7 +255,10 @@ public class QuestionSubmitController {
         BeanUtils.copyProperties(questionSubmitEditRequest, questionSubmit);
         // 数据校验
         questionSubmitService.validQuestionSubmit(questionSubmit, false);
-        User loginUser = userFeignClient.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request.getSession().getId());
+        if (loginUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
         // 判断是否存在
         long id = questionSubmitEditRequest.getId();
         QuestionSubmit oldQuestionSubmit = questionSubmitService.getById(id);

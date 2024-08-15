@@ -1,21 +1,25 @@
 package com.zjz.zojbackenduserservice.controller;
 
 import com.zjz.common.common.ErrorCode;
+import com.zjz.common.common.SpringSessionHttpSession;
 import com.zjz.common.exception.BusinessException;
 import com.zjz.common.exception.ThrowUtils;
 import com.zjz.model.entity.User;
 import com.zjz.zojbackendserviceclient.service.UserFeignClient;
 import com.zjz.zojbackenduserservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.List;
+
+import static com.zjz.common.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * 用户内部接口
@@ -28,6 +32,18 @@ public class UserInnerController implements UserFeignClient {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private SessionRepository<? extends Session> sessionRepository;
+
+    public HttpSession getSessionById(String sessionId) {
+        Session session = sessionRepository.findById(sessionId);
+        if (session == null) {
+            return null;
+        }
+        return new SpringSessionHttpSession(session);
+    }
+
     /**
      * 根据 id 获取用户
      *
@@ -57,14 +73,23 @@ public class UserInnerController implements UserFeignClient {
         return userService.listByIds(ids);
     }
 
-    /**
-     * 获取当前登录用户
-     *
-     * @param request
-     * @return
-     */
     @Override
-    public User getLoginUser(HttpServletRequest request) {
-        return userService.getLoginUser(request);
+    public User getLoginUser(String sessionId) {
+        // 使用 sessionId 查找用户信息
+
+        HttpSession session = getSessionById(sessionId);
+        if (session == null) {
+            return null;
+        }
+        Object userObj = session.getAttribute(USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null || currentUser.getId() == null) {
+            return null;
+        }
+        currentUser = this.getById(currentUser.getId());
+        return currentUser;
     }
+
+
+
 }
