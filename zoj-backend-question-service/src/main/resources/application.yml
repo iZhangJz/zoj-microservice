@@ -46,11 +46,4 @@ mybatis-plus:
       logic-not-delete-value: 0
 knife4j:
   enable: true
-  openapi:
-    title: "题目服务接口文档"
-    version: 1.0
-    group:
-      default:
-        api-rule: package
-        api-rule-resources:
-          - com.zjz.zojbackendquestionservice.controller
+
