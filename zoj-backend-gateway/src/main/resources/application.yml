@@ -1,5 +1,25 @@
 spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: zoj-gateway
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: zoj-user-service
+          uri: lb://zoj-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: zoj-question-service
+          uri: lb://zoj-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: zoj-submit-service
+          uri: lb://zoj-submit-service
+          predicates:
+            - Path=/api/submit/**
+server:
+  port: 8101
