@@ -1,13 +1,17 @@
 package com.zjz.model.dto.judge;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 判题服务返回值
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class JudgeResultResponse {
 
     /**

@@ -3,7 +3,7 @@ package com.zjz.zojbackendjudgeservice.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.zjz.common.common.ErrorCode;
 import com.zjz.common.exception.BusinessException;
-import com.zjz.model.codebox.enums.CodeBoxExecuteEnum;
+import com.zjz.model.codebox.enums.CodeBoxStatusEnum;
 import com.zjz.model.codebox.model.CodeBoxProperties;
 import com.zjz.model.codebox.model.ExecuteRequest;
 import com.zjz.model.codebox.model.ExecuteResponse;
@@ -77,12 +77,27 @@ public class JudgeServiceImpl implements JudgeService {
                 .build();
         // 3.3 调用代码沙箱进行执行
         CodeBox codeBox = codeBoxFactory.getCodeBox(codeBoxProperties.getType());
-        ExecuteResponse executeResponse = codeBox.executeCode(executeRequest);
-        // 4.通过执行结果进行判题
-        if (Objects.equals(executeResponse.getStatus(), CodeBoxExecuteEnum.FAILED.getValue())){
-            // 代码沙箱出现错误
+        ExecuteResponse executeResponse = null;
+        try{
+            executeResponse = codeBox.executeCode(executeRequest);
+        }catch (BusinessException e){
+            // 代码沙箱执行失败 更新数据库状态
+            questionSubmit.setStatus(JudgeStatusEnum.FAIL.getValue());
+            questionSubmit.setJudgeInfo(JudgeInfoEnum.SYSTEM_ERROR.getValue());
+            questionSubmitFeignClient.updateQuestionSubmit(questionSubmit);
+        }
+        if (Objects.isNull(executeResponse)){
             return JudgeResultResponse.builder()
                     .message(JudgeInfoEnum.SYSTEM_ERROR.getText())
+                    .build();
+        }
+
+        // 4.通过执行结果进行判题
+        if (Objects.equals(executeResponse.getStatus(), CodeBoxStatusEnum.CRASH.getValue())
+                || Objects.equals(executeResponse.getStatus(), CodeBoxStatusEnum.ERROR.getValue())){
+            // 代码沙箱出现错误
+            return JudgeResultResponse.builder()
+                    .message(executeResponse.getMessage())
                     .build();
         }
         VerifyContext context = VerifyContext.builder()
