@@ -16,6 +16,7 @@ import com.zjz.model.dto.submit.QuestionSubmitQueryRequest;
 import com.zjz.model.dto.submit.QuestionSubmitUpdateRequest;
 import com.zjz.model.entity.QuestionSubmit;
 import com.zjz.model.entity.User;
+import com.zjz.model.enums.JudgeInfoEnum;
 import com.zjz.model.enums.JudgeStatusEnum;
 import com.zjz.model.vo.QuestionSubmitVO;
 import com.zjz.zojbackendserviceclient.service.JudgeFeignClient;
@@ -112,11 +113,16 @@ public class QuestionSubmitController {
         // 写入数据库 默认的判题状态是“等待判题”
         boolean result = questionSubmitService.save(questionSubmit);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        // 将改题目的提交次数加一
-        questionFeignClient.addSubmitCount(questionSubmit.getQuestionId());
+
         // 写入数据库成功 开始判题
         JudgeResultResponse response = judgeFeignClient.doJudge(questionSubmit);
-        // TODO 判断用户是否通过 如果通过则将题目的通过人数加一
+        if (!response.getMessage().equals(JudgeInfoEnum.SYSTEM_ERROR.getValue())){
+            questionFeignClient.addSubmitCount(questionSubmit.getQuestionId());
+        }
+
+        if (response.getMessage().equals(JudgeInfoEnum.ACCEPTED.getValue())){
+            questionFeignClient.addPassCount(questionSubmit.getQuestionId());
+        }
         // 返回新写入的数据 id
         response.setId(questionSubmit.getId());
         return ResultUtils.success(response);

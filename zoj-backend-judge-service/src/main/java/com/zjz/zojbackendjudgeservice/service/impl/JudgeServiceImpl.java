@@ -88,7 +88,7 @@ public class JudgeServiceImpl implements JudgeService {
         }
         if (Objects.isNull(executeResponse)){
             return JudgeResultResponse.builder()
-                    .message(JudgeInfoEnum.SYSTEM_ERROR.getText())
+                    .message(JudgeInfoEnum.SYSTEM_ERROR.getValue())
                     .build();
         }
 
@@ -118,6 +118,7 @@ public class JudgeServiceImpl implements JudgeService {
             questionSubmit.setStatus(JudgeStatusEnum.FAIL.getValue());
             throw e;
         } finally {
+
             questionSubmitFeignClient.updateQuestionSubmit(questionSubmit);
         }
 

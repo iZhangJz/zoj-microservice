@@ -35,6 +35,10 @@ public class QuestionInnerController implements QuestionFeignClient {
         return question;
     }
 
+    /**
+     * 增加题目提交数量
+     * @param questionId 题目 ID
+     */
     @Override
     public void addSubmitCount(@RequestBody Long questionId){
         if (ObjectUtil.isNull(questionId)){
@@ -44,9 +48,17 @@ public class QuestionInnerController implements QuestionFeignClient {
     }
 
     /**
-     * 增加题目提交数量
+     * 增加题目通过数量
      * @param questionId 题目 ID
      */
+    @Override
+    public void addPassCount(Long questionId) {
+        if (ObjectUtil.isNull(questionId) || questionId <= 0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        questionService.addPassCount(questionId);
+    }
+
 
 
 

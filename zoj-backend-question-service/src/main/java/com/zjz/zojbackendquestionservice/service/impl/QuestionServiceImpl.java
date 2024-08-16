@@ -170,4 +170,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             lambdaUpdate().setSql("submitNum = submitNum + 1").eq(Question::getId, questionId).update();
         }
     }
+
+    /**
+     * 通过数加 1
+     * @param questionId id
+     */
+    @Override
+    public void addPassCount(Long questionId) {
+        if (questionId != null && questionId > 0) {
+            lambdaUpdate().setSql("acceptedNum = acceptedNum + 1").eq(Question::getId, questionId).update();
+        }
+    }
 }

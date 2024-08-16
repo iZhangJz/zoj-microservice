@@ -22,4 +22,8 @@ public interface QuestionFeignClient {
 
     @PutMapping("/add/count")
     void addSubmitCount(@RequestParam("questionId") Long questionId);
+
+
+    @PutMapping("/add/pass")
+    void addPassCount(@RequestParam("questionId") Long questionId);
 }

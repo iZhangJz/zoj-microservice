@@ -51,5 +51,15 @@ public interface QuestionService extends IService<Question> {
      */
     Page<QuestionVO> getQuestionVOPage(Page<Question> QuestionPage, HttpServletRequest request);
 
+    /**
+     * 增加提交次数
+     * @param questionId
+     */
     void addSubmitCount(Long questionId);
+
+    /**
+     * 增加通过次数
+     * @param questionId
+     */
+    void addPassCount(Long questionId);
 }
