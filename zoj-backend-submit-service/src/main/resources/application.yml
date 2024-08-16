@@ -31,6 +31,12 @@ spring:
     port: 6379
     timeout: 5000
     password: 749828
+  rabbitmq:
+    host: 192.168.239.129
+    port: 5672
+    virtual-host: /
+    username: admin
+    password: 123
   # 文件上传
   servlet:
     multipart:

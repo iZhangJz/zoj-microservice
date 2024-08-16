@@ -116,6 +116,7 @@ public class QuestionSubmitController {
         questionFeignClient.addSubmitCount(questionSubmit.getQuestionId());
         // 写入数据库成功 开始判题
         JudgeResultResponse response = judgeFeignClient.doJudge(questionSubmit);
+        // TODO 判断用户是否通过 如果通过则将题目的通过人数加一
         // 返回新写入的数据 id
         response.setId(questionSubmit.getId());
         return ResultUtils.success(response);
