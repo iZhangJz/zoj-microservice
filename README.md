@@ -1,5 +1,9 @@
 # ZOJ 微服务版本
  在 ZOJ 单体项目的基础上，将单体项目拆分为微服务项目，并使用 SpringCloud Alibaba 搭建微服务架构。
+### 项目架构
+
+<img src="https://github.com/user-attachments/assets/0b98930e-e937-4e4a-af88-9f52a4a73aec" width=400px>
+
 
 ### 总览
 - ***首页***，提供所有题目的浏览，支持进行标题或者标签的搜索功能 <img src="https://github.com/user-attachments/assets/b8f0f15b-946c-4f04-a144-e6001ee6c836">
