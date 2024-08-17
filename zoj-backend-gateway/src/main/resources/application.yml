@@ -23,6 +23,8 @@ spring:
             - Path=/api/submit/**
 server:
   port: 8101
+  servlet:
+    context-path: /
 knife4j:
   gateway:
     # ① 第一个配置，开启gateway聚合组件

@@ -8,7 +8,7 @@ spring:
       matching-strategy: ant_path_matcher
   session:
     store-type: redis
-    timeout: 2592000
+    timeout: 259200
   cloud:
     nacos:
       discovery:
@@ -24,12 +24,6 @@ spring:
     port: 6379
     timeout: 5000
     password: 749828
-  rabbitmq:
-    host: 192.168.239.129
-    port: 5672
-    virtual-host: /
-    username: admin
-    password: 123
   servlet:
     multipart:
       max-file-size: 10MB
@@ -40,7 +34,7 @@ server:
     context-path: /api/judge
     session:
       cookie:
-        max-age: 2592000
+        max-age: 259200
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false

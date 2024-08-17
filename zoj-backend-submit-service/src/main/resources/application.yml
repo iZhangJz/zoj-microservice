@@ -12,8 +12,8 @@ spring:
   # session 配置
   session:
     store-type: redis
-    # 30 天过期
-    timeout: 2592000
+    # 3 天过期
+    timeout: 259200
   cloud:
     nacos:
       discovery:
@@ -31,12 +31,6 @@ spring:
     port: 6379
     timeout: 5000
     password: 749828
-  rabbitmq:
-    host: 192.168.239.129
-    port: 5672
-    virtual-host: /
-    username: admin
-    password: 123
   # 文件上传
   servlet:
     multipart:
@@ -47,10 +41,10 @@ server:
   port: 8105
   servlet:
     context-path: /api/submit
-    # cookie 30 天过期
+    # cookie 3 天过期
     session:
       cookie:
-        max-age: 2592000
+        max-age: 259200
         path: /api
 mybatis-plus:
   configuration:

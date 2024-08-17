@@ -8,7 +8,7 @@ spring:
       matching-strategy: ant_path_matcher
   session:
     store-type: redis
-    timeout: 2592000
+    timeout: 259200
   cloud:
     nacos:
       discovery:
@@ -34,7 +34,7 @@ server:
     context-path: /api/user
     session:
       cookie:
-        max-age: 2592000
+        max-age: 259200
         path: /api
 mybatis-plus:
   configuration:

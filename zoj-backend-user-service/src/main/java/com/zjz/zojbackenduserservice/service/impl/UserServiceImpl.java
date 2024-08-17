@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zjz.common.common.ErrorCode;
 import com.zjz.common.constant.CommonConstant;
 import com.zjz.common.exception.BusinessException;
+import com.zjz.common.utils.JwtTool;
 import com.zjz.common.utils.SqlUtils;
 import com.zjz.model.dto.user.UserQueryRequest;
 import com.zjz.model.entity.User;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -105,7 +107,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 3. 记录用户的登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return this.getLoginUserVO(user);
+        // 4.生成 token
+        String token = JwtTool.createToken(user.getId(), Duration.ofDays(3));
+        LoginUserVO loginUserVO = getLoginUserVO(user);
+        loginUserVO.setToken(token);
+        return loginUserVO;
     }
 
 
