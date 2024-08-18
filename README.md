@@ -1,8 +1,9 @@
 # ZOJ 微服务版本
  在 ZOJ 单体项目的基础上，将单体项目拆分为微服务项目，并使用 SpringCloud Alibaba 搭建微服务架构。</br>
  :star:[前端项目地址](https://github.com/iZhangJz/zoj-front)</br>
- :grey_exclamation:[后端单体项目地址(项目整体迁移至微服务版本)](https://github.com/iZhangJz/zoj-back)</br>
  :star:[代码沙箱服务地址](https://github.com/iZhangJz/code-sand-box)</br>
+ :grey_exclamation:[后端单体项目地址(项目整体迁移至微服务版本)](https://github.com/iZhangJz/zoj-back)</br>
+ 
 ### 项目架构
 
 <img src="https://github.com/user-attachments/assets/0b98930e-e937-4e4a-af88-9f52a4a73aec" width=400px>
@@ -20,19 +21,28 @@
  
   3. Compile Error：代码编译错误，显示错误信息 </br> <img src="https://github.com/user-attachments/assets/ecaf9e87-6f7b-43a1-9714-47a38ca08a8c" width=300px>
 
+### 功能点
+- Jwt 用户登录，网关层统一鉴权
+- 头像上传 :grey_exclamation:(暂时使用本地服务静态资源存储，可扩展为 ```oss``` 服务)
+- star: 代码沙箱 Dokcer 判题 | Native 原生判题
+- star: ACM 模式答题，实现标准输入输出
+- 每个测试用例独立内存、时间占用统计
+- star: Markdown 富文本编辑器
+- star: MonacoEditor 代码编辑器
+### 支持语言
+- ```Java```
 
 ### SpringCloud Alibaba
 - ```nacos``` 服务注册与发现
 - 使用 ```SpringSession + Redis``` 实现分布式 session 登录
+- ```openFeign``` 内部服务调用
+- ```swagger + knife4j```  聚合接口文档
 
 
 ### 扩展点
-- 使用 ```Jwt Token``` 实现登录 
-- 在 ```gateway``` 中实现权限校验
 - 在 ```gateway``` 实现 Sentinel 接口限流
-- 是否适合使用 ```RabbitMq``` 做异步处理
 - 完善用户个人中心
-- 使用 ```OSS``` 进行对象存储
 - 实现 ```C++``` 或 ```C``` 等其他语言的判题机制
 - 实现查看提交记录
 - 可实现统计功能（管理员使用）
+- 用户管理
