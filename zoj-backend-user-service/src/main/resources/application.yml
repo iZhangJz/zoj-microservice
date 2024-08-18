@@ -1,8 +1,6 @@
 spring:
   application:
     name: zoj-user-service
-  profiles:
-    active: dev
   mvc:
     static-path-pattern: /static/**
     pathmatch:
@@ -11,6 +9,10 @@ spring:
     store-type: redis
     timeout: 259200
   cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8090
+      http-method-specify: true
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848

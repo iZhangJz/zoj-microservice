@@ -37,10 +37,10 @@
 - 使用 ```SpringSession + Redis``` 实现分布式 session 登录
 - ```openFeign``` 内部服务调用
 - ```swagger + knife4j```  聚合接口文档
+- ```sentinel dashboard``` 对提交服务进行流量控制
 
 
 ### 扩展点
-- 在 ```gateway``` 实现 Sentinel 接口限流
 - 完善用户个人中心
 - 实现 ```C++``` 或 ```C``` 等其他语言的判题机制
 - 实现查看提交记录
