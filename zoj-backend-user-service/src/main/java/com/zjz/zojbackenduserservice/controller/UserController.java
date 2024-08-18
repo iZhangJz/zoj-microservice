@@ -17,12 +17,21 @@ import com.zjz.zojbackenduserservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 import static com.zjz.zojbackenduserservice.service.impl.UserServiceImpl.SALT;
 
@@ -38,6 +47,13 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+
+    @Value("${server.port}")
+    private int port;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
 
     // region 登录相关
@@ -279,5 +295,57 @@ public class UserController {
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
+    }
+
+    /**
+     * 头像上传
+     */
+    @PostMapping("/avatar/upload")
+    public BaseResponse<String> userAvatarUpload(@RequestParam(name = "file") MultipartFile file, HttpServletRequest request) {
+        if (file.isEmpty()) {
+           throw new BusinessException(ErrorCode.PARAMS_ERROR, "File is empty");
+        }
+
+        // 验证文件类型
+        String contentType = file.getContentType();
+        if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType) && !"image/jpg".equals(contentType))  {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Only JPEG and PNG images are allowed");
+        }
+
+        User loginUser = userService.getLoginUser(request);
+
+        try {
+            // 生成唯一文件名
+            String fileName = loginUser.getId() + "." + getFileExtension(Objects.requireNonNull(file.getOriginalFilename()));
+
+            String projectPath = "D:\\code\\zoj-microservice\\zoj-backend-gateway\\src\\main\\resources\\static";
+            String uploadDir = projectPath + File.separator + "avatars";
+            // 创建存储文件的路径
+            Path filePath = Paths.get(uploadDir, fileName);
+
+            // 确保目录存在
+            Files.createDirectories(filePath.getParent());
+
+            // 保存文件到本地
+            file.transferTo(filePath.toFile());
+
+            // 返回存储路径或URL
+            String ip = InetAddress.getLoopbackAddress().getHostAddress();
+            String fileUrl = "http://" + ip + ":" + port + contextPath + "/static/avatars/" + fileName;  // 这个URL可以根据实际情况调整
+
+            // 将fileUrl存储到数据库中，与用户记录关联
+            loginUser.setUserAvatar(fileUrl);
+            userService.updateById(loginUser);
+
+
+
+            return ResultUtils.success(fileUrl);
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "File upload failed");
+        }
+    }
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
     }
 }

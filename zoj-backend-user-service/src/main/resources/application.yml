@@ -4,6 +4,7 @@ spring:
   profiles:
     active: dev
   mvc:
+    static-path-pattern: /static/**
     pathmatch:
       matching-strategy: ant_path_matcher
   session:
@@ -47,3 +48,5 @@ mybatis-plus:
       logic-not-delete-value: 0
 knife4j:
   enable: true
+
+
