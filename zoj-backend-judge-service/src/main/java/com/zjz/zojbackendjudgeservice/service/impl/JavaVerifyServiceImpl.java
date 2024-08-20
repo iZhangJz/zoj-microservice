@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @Service
 @VerifyStrategyCheck(language = "java")
-public class DefaultVerifyServiceImpl implements VerifyStrategyService {
+public class JavaVerifyServiceImpl implements VerifyStrategyService {
 
 
     @Override

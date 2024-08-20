@@ -318,13 +318,21 @@ public class UserController {
             // 生成唯一文件名
             String fileName = loginUser.getId() + "." + getFileExtension(Objects.requireNonNull(file.getOriginalFilename()));
 
-            String projectPath = "D:\\code\\zoj-microservice\\zoj-backend-gateway\\src\\main\\resources\\static";
+
+            String rootPath = System.getProperty("user.dir");
+
+            String projectPath = rootPath + File.separator +  "zoj-backend-user-service\\src\\main\\resources\\static";
             String uploadDir = projectPath + File.separator + "avatars";
             // 创建存储文件的路径
             Path filePath = Paths.get(uploadDir, fileName);
 
             // 确保目录存在
             Files.createDirectories(filePath.getParent());
+
+            // 查看文件是否存在，如果存在则先删除
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+            }
 
             // 保存文件到本地
             file.transferTo(filePath.toFile());
@@ -336,8 +344,6 @@ public class UserController {
             // 将fileUrl存储到数据库中，与用户记录关联
             loginUser.setUserAvatar(fileUrl);
             userService.updateById(loginUser);
-
-
 
             return ResultUtils.success(fileUrl);
         } catch (IOException e) {

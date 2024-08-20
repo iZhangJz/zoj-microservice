@@ -31,8 +31,10 @@ public class RemoteCodeBox implements CodeBox {
     public ExecuteResponse executeCode(ExecuteRequest executeRequest) {
         String request = JSONUtil.toJsonStr(executeRequest);
         ExecuteResponse executeResponse = new ExecuteResponse();
+        String language = executeRequest.getLanguage();
         try{
-            String response = HttpUtil.createPost(codeBoxProperties.getRemoteUrl())
+            String url = codeBoxProperties.getRemoteUrl() + language;
+            String response = HttpUtil.createPost(url)
                     .header(codeBoxProperties.getAuthHeader(),codeBoxProperties.getSecretKey())
                     .body(request)
                     .execute()

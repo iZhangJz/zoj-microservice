@@ -46,7 +46,7 @@ mybatis-plus:
       logic-not-delete-value: 0
 codebox:
   type: remote
-  remote-url: http://localhost:8081/api/java/native
+  remote-url: http://192.168.239.129:8081/api/docker/
   auth-header: auth
   secret-key: secretKey
 

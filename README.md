@@ -25,12 +25,14 @@
 - Jwt 用户登录，网关层统一鉴权
 - 头像上传 :grey_exclamation:(暂时使用本地服务静态资源存储，可扩展为 ```oss``` 服务)
 - star: 代码沙箱 Dokcer 判题 | Native 原生判题
+- star: 支持多种语言
 - star: ACM 模式答题，实现标准输入输出
 - 每个测试用例独立内存、时间占用统计
 - star: Markdown 富文本编辑器
 - star: MonacoEditor 代码编辑器
 ### 支持语言
-- ```Java```
+- star:```Java```
+- star:```C++```
 
 ### SpringCloud Alibaba
 - ```nacos``` 服务注册与发现
